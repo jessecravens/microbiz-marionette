@@ -32,6 +32,9 @@ Backbone.Marionette = (function(Backbone, _, $){
     // `onShow` and `close` method on your view, just after showing
     // or just before closing the view, respectively.
     show: function(view){
+	  // console.log('Marionette.RegionManager: show: ' + view);
+	  // console.log(view);
+	
       var oldView = this.currentView;
       this.currentView = view;
 
@@ -262,6 +265,8 @@ Backbone.Marionette = (function(Backbone, _, $){
     this.initializers = [];
     this.vent = _.extend({}, Backbone.Events, Marionette.BindTo);
     _.extend(this, options);
+	console.log('vent');
+	console.log(this.vent)
   };
 
   _.extend(Marionette.Application.prototype, Backbone.Events, {
@@ -273,9 +278,17 @@ Backbone.Marionette = (function(Backbone, _, $){
     // initializes all of the regions that have been added
     // to the app, and runs all of the initializer functions
     start: function(options){
+	  console.log('Marionette.Application.start(options)');
+	  console.log('options:');
+	  console.log(options);
+	
       this.trigger("initialize:before", options);
       for(var i=0; i<this.initializers.length; i++){
+		console.log('BEGIN - initializer called:');
+		
         var initializer = this.initializers[i];
+		console.log(initializer);
+
         initializer(options);
       }
       this.trigger("initialize:after", options);

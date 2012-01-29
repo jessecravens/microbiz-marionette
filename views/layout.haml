@@ -1,9 +1,10 @@
 !!! 5
 %html
   %head
-    %title BBCloneMail: A Backbone.Marionette Reference Application
+    %title microbizworks suite
     %link{:href=>"/css/bbclonemail.css", :rel=>"stylesheet", :type=>"text/css"}
-
+    
+    // pre-requisites and libraries
     %script{:id=>"email-preview-template", :type=>"text/x-jquery-tmpl"}
       %header
         %span.from
@@ -49,6 +50,7 @@
           %a{:href=>"#inbox/categories/${$value.name}", :"data-category"=>"${$value.name}"}${$value.name}
         {{/each}}
 
+    // pre-requisites and libraries
     %script{:id=>"contact-item-template", :type=>"text/x-jquery-tmpl"}
       %span.name
         ${name}
@@ -69,28 +71,47 @@
         %li 
           %a{:href=>"#"}Coworkers
 
+    // pre-requisites and libraries
+    %script{:id=>"worktask-item-template", :type=>"text/x-jquery-tmpl"}
+      %span.name
+        ${name}
+    
+    %script{:id=>"behaviorlog-item-template", :type=>"text/x-jquery-tmpl"}
+      %span.name
+        Name: ${name}
+        , Worktask ID: ${worktask_id}
+        , User ID: ${user_id}
+
+    %script{:id=>"worktasks-filters-view-template", :type=>"text/x-jquery-tmpl"}
+      %p Worktasks Dashboard Filters
+      %ul
+        %li
+          %a{:href=>"#"}Locations
+        %li
+          %a{:href=>"#"}Jobists
+        %li
+          %a{:href=>"#"}People
+        %li
+          %a{:href=>"#"}Assets
+        %li
+          %a{:href=>"#"}Time
+
   %body
     %section.header
       .container
         %header
-          %h1 BBCloneMail
+          %h1 microbizworks
           %p.tag-line 
             A 
-            %a{:href=> "http://github.com/derickbailey/backbone.marionette"}Backbone.Marionette
-            Reference Application
-        %header.help
-          This application demonstrates the use of my 
-          %a{:href => "http://github.com/derickbailey/backbone.marionette"}Backbone.Marionette
-          plugin for BackboneJS. To see it in action, change the selected app
-          in the drop list to the left. Be sure to check out 
-          %a{:href => "http://github.com/derickbailey/bbclonemail"}the source code
-          to see how it works.
+            %a{:href=> "http://worktasks.com"}microbizworks suite
+            Prototype
             
     %section.content
       .container
         %navigation
           %section#app-selector
             %select
+              %option{:value=>"worktasks"}WorkTasks
               %option{:value=>"mail"}Mail
               %option{:value=>"contacts"}Contacts
           %section#navigation
@@ -102,45 +123,6 @@
     %section.footer
       .container
         %footer
-          %ul
-            %li
-              Copyright &copy;2011
-              %a{:href=>"http://mutedsolutions.com"}Muted Solutions, LLC.
-              All rights reserved. 
-          %ul
-            %li
-              BBCloneMail is a reference app for building awesomeness with 
-              %a{:href => "http://backbonejs.org"}Backbone.js 
-              and 
-              %a{:href => "http://github.com/derickbailey/backbone.marionette"}Backbone.Marionette
-          %ul
-            %li.title BBCloneMail Source:
-            %li
-              %a{:href => "http://github.com/derickbailey/bbclonemail"}
-                The Github Project
-            %li
-              %a{:href => "http://derickbailey.github.com/bbclonemail/docs/bbclonemail.html"}
-                The Annoted Code
-          %ul
-            %li.title
-              Find me Twitter:
-            %li
-              %a{:href => "http://twitter.com/derickbailey"}@derickbailey
-            %li
-              %a{:href => "http://twitter.com/backbonejsclass"}@backbonejsclass
-            %li
-              %a{:href => "http://twitter.com/mutedsolutions"}@mutedsolutions
-          %ul
-            %li.title
-              Find me on the web:
-            %li
-              %a{:href => "http://backbonetraining.net"}BackboneTraining.net
-            %li
-              %a{:href => "http://watchmecode.net"}WatchMeCode.net
-            %li
-              %a{:href => "http://derickbailey.lostechies.com"}DerickBailey.lostechies.com
-            %li
-              %a{:href => "http://mutedsolutions.com"}MutedSolutions.com
 
     // pre-requisites and libraries
     %script{:src=>"/javascripts/vendor/json2.js"}
@@ -151,24 +133,31 @@
     %script{:src=>"/javascripts/vendor/backbone.marionette.js"}
 
     // general app files
-    %script{:src=>"/javascripts/bbclonemail.js"}
-    %script{:src=>"/javascripts/bbclonemail.views.js"}
-    %script{:src=>"/javascripts/bbclonemail.appselection.js"}
+    %script{:src=>"/javascripts/microbiz.js"}
+    %script{:src=>"/javascripts/microbiz.views.js"}
+    %script{:src=>"/javascripts/microbiz.appselection.js"}
 
     // routing files
-    %script{:src=>"/javascripts/bbclonemail.routing.js"}
-    %script{:src=>"/javascripts/bbclonemail.routing.mailrouting.js"}
-    %script{:src=>"/javascripts/bbclonemail.routing.contactsrouting.js"}
+    %script{:src=>"/javascripts/microbiz.routing.js"}
+    %script{:src=>"/javascripts/apps/mail/microbiz.routing.mailrouting.js"}
+    %script{:src=>"/javascripts/apps/contacts/microbiz.routing.contactsrouting.js"}
+    %script{:src=>"/javascripts/apps/worktasks/microbiz.routing.tasksrouting.js"}
 
     // mail app files
-    %script{:src=>"/javascripts/bbclonemail.mailapp.js"}
-    %script{:src=>"/javascripts/bbclonemail.mailapp.categories.js"}
-    %script{:src=>"/javascripts/bbclonemail.mailapp.mailbox.js"}
+    %script{:src=>"/javascripts/apps/mail/microbiz.mailapp.js"}
+    %script{:src=>"/javascripts/apps/mail/microbiz.mailapp.categories.js"}
+    %script{:src=>"/javascripts/apps/mail/microbiz.mailapp.mailbox.js"}
 
     // contacts app files
-    %script{:src=>"/javascripts/bbclonemail.contactsapp.js"}
-    %script{:src=>"/javascripts/bbclonemail.contactsapp.categories.js"}
-    %script{:src=>"/javascripts/bbclonemail.contactsapp.contactlist.js"}
+    %script{:src=>"/javascripts/apps/contacts/microbiz.contactsapp.js"}
+    %script{:src=>"/javascripts/apps/contacts/microbiz.contactsapp.categories.js"}
+    %script{:src=>"/javascripts/apps/contacts/microbiz.contactsapp.contactlist.js"}
+
+    // worktasks app files
+    %script{:src=>"/javascripts/apps/worktasks/microbiz.worktasksapp.js"}
+    %script{:src=>"/javascripts/apps/worktasks/microbiz.worktasksapp.worktaskslist.js"}
+    %script{:src=>"/javascripts/apps/worktasks/microbiz.worktasksapp.filters.js"}
+    %script{:src=>"/javascripts/apps/worktasks/microbiz.worktasksapp.behaviorloglist.js"}
 
     :javascript
       $(function(){
@@ -256,5 +245,51 @@
           }
         ];
 
-        BBCloneMail.start(options);
+        options.worktasks = [
+          {
+            id: "09vsjk3209svdjh",
+            name: "task 1"
+          },
+          {
+            id: "45890bdhj4590gf",
+            name: "task 2"
+          },
+          {
+            id: "120985h4509vfh4",
+            name: "task 3"
+          }
+        ];
+
+        options.behaviorlogs = [
+          {
+            id: "1",
+            name: "task 1",
+            worktask_id: "1",
+            user_id: "7",
+            created_at: "2011-11-22 23:30:12 UTC",
+            completed: "true",
+            completion_duration: "10"
+          },
+          {
+            id: "2",
+            name: "task 2",
+            worktask_id: "2",
+            user_id: "7",
+            created_at: "2011-11-22 23:30:12 UTC",
+            completed: "true",
+            completion_duration: "5"
+          },
+          {
+            id: "3",
+            name: "task 3",
+            worktask_id: "3",
+            user_id: "7",
+            created_at: "2011-11-22 23:30:12 UTC",
+            completed: "true",
+            completion_duration: "4"
+          }
+        ];
+
+
+        MicroBiz.start(options);
       });

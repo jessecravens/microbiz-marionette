@@ -4,6 +4,8 @@ require 'sinatra/reloader' if development?
 require 'haml'
 require 'json'
 
+set :port, 3333
+
 get "/" do
   haml :layout
 end
