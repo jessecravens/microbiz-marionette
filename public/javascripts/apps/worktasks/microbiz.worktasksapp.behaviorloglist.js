@@ -28,12 +28,22 @@ MicroBiz.WorkTasksApp.BehaviorLogList = (function(MicroBiz, Backbone){
 
   // Show the list of behaviorlogs.
   BehaviorLogList.show = function(behaviorlogs){
-	console.log('BehaviorLogList.show');
+	// console.log('BehaviorLogList.show');
     var behaviorlogsView = new BehaviorLogListView({
       collection: behaviorlogs
     });
     MicroBiz.mainRegion.show(behaviorlogsView);
-  }
+  };
+
+  // Show the list of behaviorlogs.
+  BehaviorLogList.showFiltered = function(behaviorlogs){
+	// console.log('BehaviorLogList.show');
+    var behaviorlogsView = new BehaviorLogListView({
+      collection: behaviorlogs
+    });
+    MicroBiz.mainRegion.show(behaviorlogsView);
+  };
+
 
   return BehaviorLogList;
 })(MicroBiz, Backbone);

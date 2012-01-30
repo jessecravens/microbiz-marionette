@@ -56,6 +56,13 @@ MicroBiz.MailApp = (function(MicroBiz, Backbone){
   // Show a list of email for the given category.
   MailApp.showCategory = function(category){
     showFilteredEmailList(category);
+    $('#company-filters').empty();
+    $('#location-filters').empty();
+    $('#company-filters').empty();
+    $('#joblist-filters').empty();
+    $('#user-filters').empty();
+    $('#asset-filters').empty();
+    $('#time-filters').empty();
     MailApp.Categories.showCategoryList();
   };
 

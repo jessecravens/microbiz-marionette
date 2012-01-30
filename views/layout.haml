@@ -86,15 +86,95 @@
       %p Worktasks Dashboard Filters
       %ul
         %li
-          %a{:href=>"#"}Locations
+          %a{:href=>"#"}Companies
+          %ul.CompanyFilters
+            {{each items}}
+            %li
+              ${$value.name}
+            {{/each}}
         %li
-          %a{:href=>"#"}Jobists
+          %a{:href=>"#"}Locations
+          %ul.locationFilters
+            {{each items}}
+            %li
+              ${$value.name}
+            {{/each}}
+        %li
+          %a{:href=>"#"}Joblists
+          %ul.joblistFilters
+            {{each items}}
+            %li
+              ${$value.name}
+            {{/each}}
         %li
           %a{:href=>"#"}People
+          %ul.peopleFilters
+            {{each items}}
+            %li
+              ${$value.name}
+            {{/each}}
         %li
           %a{:href=>"#"}Assets
+          %ul.assetsFilters
+            {{each items}}
+            %li
+              ${$value.name}
+            {{/each}}
         %li
           %a{:href=>"#"}Time
+          %ul.timeFilters
+            {{each items}}
+            %li
+              ${$value.name}
+            {{/each}}
+
+    %script{:id=>"worktasks-company-filters-view-template", :type=>"text/x-jquery-tmpl"}
+      %li
+        %a{:href=>"#"}Companies
+        %span.Companies
+          {{each items}}
+          %input{:type=>"button", :class=>"bluetag", :value=>"${$value.name}"}
+          {{/each}}
+
+    %script{:id=>"worktasks-location-filters-view-template", :type=>"text/x-jquery-tmpl"}
+      %li
+        %a{:href=>"#"}Locations
+        %span.Locations
+          {{each items}}
+          %input{:type=>"button", :class=>"bluetag", :value=>"${$value.name}"}
+          {{/each}}
+	    
+    %script{:id=>"worktasks-joblist-filters-view-template", :type=>"text/x-jquery-tmpl"}
+      %li
+        %a{:href=>"#"}Joblists
+        %span.Joblists
+          {{each items}}
+          %input{:type=>"button", :class=>"bluetag", :value=>"${$value.name}"}
+          {{/each}}
+
+    %script{:id=>"worktasks-user-filters-view-template", :type=>"text/x-jquery-tmpl"}
+      %li
+        %a{:href=>"#"}Users
+        %span.Users
+          {{each items}}
+          %input{:type=>"button", :class=>"bluetag", :value=>"${$value.name}"}
+          {{/each}}
+
+    %script{:id=>"worktasks-asset-filters-view-template", :type=>"text/x-jquery-tmpl"}
+      %li
+        %a{:href=>"#"}Assets
+        %span.Assets
+          {{each items}}
+          %input{:type=>"button", :class=>"bluetag", :value=>"${$value.name}"}
+          {{/each}}
+
+    %script{:id=>"worktasks-time-filters-view-template", :type=>"text/x-jquery-tmpl"}
+      %li
+        %a{:href=>"#"}Time
+        %span.Time
+          {{each items}}
+          %input{:type=>"button", :class=>"bluetag", :value=>"${$value.name}"}
+          {{/each}}
 
   %body
     %section.header
@@ -114,7 +194,13 @@
               %option{:value=>"worktasks"}WorkTasks
               %option{:value=>"mail"}Mail
               %option{:value=>"contacts"}Contacts
-          %section#navigation
+          %section#navigation      
+          %section#company-filters
+          %section#location-filters
+          %section#joblist-filters
+          %section#user-filters
+          %section#asset-filters
+          %section#time-filters
 
         %article#main
           #loading
@@ -290,6 +376,135 @@
           }
         ];
 
+        options.locations = [
+          {
+            id: "1",
+            name: "Boerne"
+          },
+          {
+            id: "2",
+            name: "Kerrville"
+          },
+          {
+            id: "3",
+            name: "Fredericksburg"
+          }
+        ];
+
+        options.filters = [
+          {
+            id: "1",
+            name: "Filter1"
+          },
+          {
+            id: "2",
+            name: "Filter2"
+          },
+          {
+            id: "3",
+            name: "Filter3"
+          }
+        ];
+
+        options.companies = [
+          {
+            id: "1",
+            name: "Kuhl Yougurt",
+            locations: [{
+              name: "Boerne", 
+              desc:"desc.....",
+              logoURL:"http://google.com"
+            },
+            {
+              name: "Kerrville", 
+              desc:"desc....", 
+              logoURL:"http://google.com"
+            },
+            {
+              name: "Fredericksburg", 
+              desc:"", 
+              logoURL:"http://google.com"
+            }],
+            joblists: [{
+              name: "Opening Cashier", 
+              desc:"desc....."
+            },
+            {
+              name: "Opening Kitchen", 
+              desc:"desc...."
+            }],
+            users: [{
+              name: "John Smith", 
+              desc:"desc....."
+            },
+            {
+              name: "Katy Smith", 
+              desc:"desc...."
+            }],
+            assets: [{
+              name: "Pictures", 
+              desc:"desc....."
+            },
+            {
+              name: "Feedback", 
+              desc:"desc...."
+            }],
+            time: [{
+              start: "2011-11-22 23:30:12 UTC", 
+              end:"2011-11-22 23:30:12 UTC"
+            },
+            {
+              start: "2011-11-22 23:30:12 UTC", 
+              end:"2011-11-22 23:30:12 UTC"
+            }]
+          },
+          {
+            id: "2",
+            name: "Maids Service",
+            locations: [{
+              name: "San Antonio", 
+              desc:"desc.....",
+              logoURL:"http://google.com"
+            },
+            {
+              name: "Austin", 
+              desc:"desc....", 
+              logoURL:"http://google.com"
+            }],
+            joblists: [{
+              name: "408 South Plant", 
+              desc:"desc....."
+            },
+            {
+              name: "102 Brookside Lane", 
+              desc:"desc...."
+            }],
+            users: [{
+              name: "Susan Rios", 
+              desc:"desc....."
+            },
+            {
+              name: "Amanda Taylor", 
+              desc:"desc...."
+            }],
+            assets: [{
+              name: "Pictures", 
+              desc:"desc....."
+            },
+            {
+              name: "Feedback", 
+              desc:"desc...."
+            }],
+            time: [{
+              start: "2011-11-22 23:30:12 UTC", 
+              end:"2011-11-22 23:30:12 UTC"
+            },
+            {
+              start: "2011-11-22 23:30:12 UTC", 
+              end:"2011-11-22 23:30:12 UTC"
+            }]
+          }
+        ];
 
         MicroBiz.start(options);
       });

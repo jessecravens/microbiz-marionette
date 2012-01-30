@@ -15,6 +15,13 @@ MicroBiz = new Backbone.Marionette.Application();
 // is displayed.
 MicroBiz.addRegions({
   navigationRegion: "#navigation",
+  FilterRegion: "#filters",
+  CompanyFilterRegion: "#company-filters",
+  LocationFilterRegion: "#location-filters",
+  JoblistFilterRegion: "#joblist-filters",
+  UserFilterRegion: "#user-filters",
+  AssetFilterRegion: "#asset-filters",
+  TimeFilterRegion: "#time-filters",
   mainRegion: "#main"
 });
 

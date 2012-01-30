@@ -26,6 +26,13 @@ MicroBiz.ContactsApp = (function(MicroBiz, Backbone){
 	console.log('showContactList');
     MicroBiz.ContactsApp.ContactList.show(Contacts.contacts);
     MicroBiz.ContactsApp.Categories.show();
+    $('#company-filters').empty();
+    $('#location-filters').empty();
+    $('#company-filters').empty();
+    $('#joblist-filters').empty();
+    $('#user-filters').empty();
+    $('#asset-filters').empty();
+    $('#time-filters').empty();
     MicroBiz.vent.trigger("contacts:show");
   };
 

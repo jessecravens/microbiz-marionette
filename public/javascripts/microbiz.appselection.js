@@ -73,7 +73,7 @@ MicroBiz.AppSelection = (function(MicroBiz, Backbone){
 
       // When the worktasks app is shown, be sure we are displaying 
       // "Worktasks" in the app selector.
-      MicroBiz.vent.bind("worktasks:show", function(){
+      MicroBiz.vent.bind("behaviorlogs:show", function(){
         self.setSelection("worktasks");
       });
     }
