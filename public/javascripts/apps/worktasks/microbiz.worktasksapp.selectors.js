@@ -50,6 +50,7 @@ MicroBiz.WorkTasksApp.Selectors = (function(MicroBiz, Backbone, $){
 		}
 	  // repaint the filters	
 	  MicroBiz.vent.trigger("state:worktasks:filters:changed");
+	  MicroBiz.vent.trigger("behaviorlogs:show");
     }
   });
 
@@ -103,7 +104,15 @@ MicroBiz.WorkTasksApp.Selectors = (function(MicroBiz, Backbone, $){
 
 		var stateItemsArr = stateObj.get('items');
 		return stateItemsArr;
-	}
+	};
+	
+  var getSelectersCurrentStateByName = function(type){
+		
+		var arr = getSelectersStateArray(type);
+	    MicroBiz.WorkTasksApp.current_company = _.first(arr) 
+		return MicroBiz.WorkTasksApp.current_company;
+	};
+	
 	
   // Filters Public API
   // --------------------------
@@ -119,6 +128,13 @@ MicroBiz.WorkTasksApp.Selectors = (function(MicroBiz, Backbone, $){
 
 	MicroBiz.CompanySelectorRegion.show(companySelectorView);
   };
+
+  Selectors.getSelectersCurrentStateByName = function(type){
+    var arr = getSelectersStateArray(type);
+	MicroBiz.WorkTasksApp.current_company = _.first(arr);
+	return MicroBiz.WorkTasksApp.current_company;
+  };
+  
 
   // Worktasks Filters Event Handlers
   // -----------------------
@@ -141,6 +157,7 @@ MicroBiz.WorkTasksApp.Selectors = (function(MicroBiz, Backbone, $){
   // screen when we need to.
   MicroBiz.addInitializer(function(options){
 	Selectors.CompanySelectorCollection = buildSelectors('companies', MicroBiz.options.companies, MicroBiz.WorkTasksApp.selectors_state);
+    
   });
 
   return Selectors;

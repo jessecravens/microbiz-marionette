@@ -49,6 +49,7 @@ MicroBiz.WorkTasksApp = (function(MicroBiz, Backbone){
 
   // Show the behavior log list.
   Worktasks.showBehaviorLogList = function(){
+
     MicroBiz.WorkTasksApp.BehaviorLogList.show(Worktasks.behaviorlogs);
 
 	// doesnt currently get passed any params
@@ -58,8 +59,8 @@ MicroBiz.WorkTasksApp = (function(MicroBiz, Backbone){
 	$('#navigation').empty();
 	
 	// sets the router to #worktasks
-    MicroBiz.vent.trigger("behaviorlogs:show");
-
+	MicroBiz.vent.trigger("behaviorlogs:show");
+  
   };
 
   // Show filtered behavior log list.

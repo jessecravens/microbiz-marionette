@@ -388,8 +388,7 @@ MicroBiz.WorkTasksApp.Filters = (function(MicroBiz, Backbone, $){
 
 		var stateItemsArr = stateObj.get('items');
 		return stateItemsArr;
-	}
-
+	};
 
   // Filters Public API
   // --------------------------

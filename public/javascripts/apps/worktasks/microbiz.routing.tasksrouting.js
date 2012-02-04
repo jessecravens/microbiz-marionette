@@ -23,13 +23,17 @@ MicroBiz.Routing.WorktasksRouting = (function(MicroBiz, Backbone){
 
   WorktasksRouting.Router = MicroBiz.Routing.AppRouter.extend({
     appRoutes: {
-      "worktasks": "showBehaviorLogList"
+      "worktasks": "showBehaviorLogList",
+	  "worktasks/*path": "showBehaviorLogList"
     }
   });
   // 
   // Show route for the worktasks app
   MicroBiz.vent.bind("behaviorlogs:show", function(){
-    MicroBiz.Routing.showRoute("worktasks");
+	//var company = $(".Companies").find(':selected').data('selector');
+    var company = MicroBiz.WorkTasksApp.Selectors.getSelectersCurrentStateByName('company');
+    var trimmed = company.replace(/\s/g, "") ;
+	MicroBiz.Routing.showRoute("worktasks", trimmed);
   });
   
   // Initialization
