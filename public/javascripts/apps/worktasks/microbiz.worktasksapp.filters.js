@@ -8,14 +8,8 @@
 MicroBiz.WorkTasksApp.Filters = (function(MicroBiz, Backbone, $){
   var Filters = {};
 
-  // The filter model and collection
   var Filter = Backbone.Model.extend({});
-  // var FilterCollection = Backbone.Collection.extend({
-  //   model: Filter
-  // });
-  var CompanyFilterCollection = Backbone.Collection.extend({
-    model: Filter
-  });
+
   var LocationFilterCollection = Backbone.Collection.extend({
     model: Filter
   });
@@ -93,39 +87,63 @@ MicroBiz.WorkTasksApp.Filters = (function(MicroBiz, Backbone, $){
     }
   });
 
-  Filters.CompanyFiltersView = MicroBiz.ItemView.extend({
-    template: "#worktasks-company-filters-view-template",
-
-    events: {
-      "click a": "filterClicked"
-    },
-
-    filterClicked: function(e){
-      e.preventDefault();
-      var filter = $(e.currentTarget).data("filter");
-      if (filter){		
-        MicroBiz.vent.trigger("behaviorlogs:filter:show", filter);
-      } else {
-        MicroBiz.vent.trigger("behaviorlogs:show");
-      }
-    }
-  });
-
   Filters.LocationFiltersView = MicroBiz.ItemView.extend({
     template: "#worktasks-location-filters-view-template",
 
     events: {
-      "click a": "filterClicked"
+      "click .checkbox-location": "filterClicked"
     },
 
     filterClicked: function(e){
-      e.preventDefault();
       var filter = $(e.currentTarget).data("filter");
-      if (filter){		
-        MicroBiz.vent.trigger("behaviorlogs:filter:show", filter);
-      } else {
-        MicroBiz.vent.trigger("behaviorlogs:show");
-      }
+	  console.log('filter clicked');
+	  console.log(filter)
+	
+	  // this is the fork for showing different content based on a catgory
+	  // it can be used here to retrigger showFilters
+	  // firing the change to the filters state model
+	
+	  // var test = MicroBiz.WorkTasksApp.filters_state.get(1);
+		// convert filters_state (Collection) into an array
+		
+		var state = MicroBiz.WorkTasksApp.filters_state;
+		
+		var stateArr = _.toArray(state);
+		console.log(stateArr);
+		
+		// use _.find() to get the model with a 'name' attribute == to 'location' out of the state array
+		var stateLocObj = _.find(stateArr,
+			function(ob) {
+		  		return ob.get('name') == "location";
+			});
+		
+		// console.log(stateLocObj.get('items'));
+		
+		var stateLocArr = stateLocObj.get('items');
+		console.log(stateLocArr)
+		
+		// now I have my current state array
+		// and a filter from the click event
+		// if filter exists in the array - then remove
+		// if not - then add
+		if (_.indexOf(stateLocArr, filter) != -1){
+			var index = stateLocArr.indexOf(filter);
+			stateLocArr.splice(index, 1);
+		}
+		else {
+			stateLocArr.push(filter);
+		}
+		
+		
+		// then update state
+        //MicroBiz.WorkTasksApp.filters_state.set({items: stateLocArr})	
+	    MicroBiz.vent.trigger("state:worktasks:filters:changed");
+	
+      // if (filter){		
+      //   MicroBiz.vent.trigger("behaviorlogs:filter:show", filter);
+      // } else {
+      //   MicroBiz.vent.trigger("behaviorlogs:show");
+      // }
     }
   });
 
@@ -207,39 +225,54 @@ MicroBiz.WorkTasksApp.Filters = (function(MicroBiz, Backbone, $){
 
   // If necesary, Do some processing on your onbjects before sending to view. 
   // Transform initial JSON to collections of filter models
-  var buildFilters = function(filterType, obj){	
+  var buildFilters = function(filterType, obj, state){	
 	console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! buildFilters');
 
 	switch (filterType){
-	case 'companies':
-		console.log('filterType:' + filterType);
-		var filter;
-		var filterCollection = new CompanyFilterCollection();
-		_.each(obj, function(companies){
-		  // console.log('within filterCollection parse');
-		  // console.log(companies.name)
-		  // console.log(obj.name)
-		  filter = new Filter({name: companies.name});
-		  // console.log(filter)	
-		  filterCollection.add(filter);
-		  // console.log(filterCollection);
-		});
-		return filterCollection;
-	  break;
 	case 'locations':
 		console.log('filterType:' + filterType);
 		var filter;
 		var filterCollection = new LocationFilterCollection();
 		_.each(obj, function(companies){
-		  // console.log('within LocationFilterCollection parse');
-		  // console.log(companies.name)
 		
 				_.each(companies.locations, function(locations){
-					// console.log(companies)
-					// console.log(locations.name)
-		  			filter = new Filter({name: locations.name, company_name: companies.name});
-		  			// console.log(filter)	
-		  			filterCollection.add(filter);
+					
+					console.log('STATE - locations');
+					console.log(typeof state);
+					console.log(locations)
+					
+					// convert filters_state (Collection) into an array
+					var stateArr = _.toArray(state);
+					console.log(stateArr);
+					
+					// use _.find() to get the model with a 'name' attribute == to 'location' out of the state array
+					var stateLocObj = _.find(stateArr,
+						function(ob) {
+					  		return ob.get('name') == "location";
+						});
+					
+					// console.log(stateLocObj.get('items'));
+					
+					var stateLocArr = stateLocObj.get('items');			
+					
+					// Build the filter models and eventually add them to the filter Collection
+					// if locations.name is present in the statelObj
+					if (_.indexOf(stateLocArr, locations.name) != -1) {
+					    // then set the css hidden class to false
+					    filter = new Filter({
+					        name: locations.name,
+					        company_name: companies.name,
+					        hidden: false
+					    });
+					 } else {
+					    filter = new Filter({
+					        name: locations.name,
+					        company_name: companies.name,
+					        hidden: true
+					    });
+					 };
+					 // add the new filter model to the collection
+					 filterCollection.add(filter);
 				});
 		});
 		// console.log(filterCollection);
@@ -255,11 +288,43 @@ MicroBiz.WorkTasksApp.Filters = (function(MicroBiz, Backbone, $){
 		  console.log(companies.name)
 
 				_.each(companies.joblists, function(joblists){
-					// console.log(companies)
-					console.log(joblists.name)
-		  			filter = new Filter({name: joblists.name, company_name: companies.name});
-		  			console.log(filter)	
-		  			filterCollection.add(filter);
+					
+					console.log('STATE - joblists');
+					console.log(typeof state);
+					console.log(joblists)
+					
+					// convert filters_state (Collection) into an array
+					var stateArr = _.toArray(state);
+					console.log(stateArr);
+					
+					// use _.find() to get the model with a 'name' attribute == to 'location' out of the state array
+					var stateJobObj = _.find(stateArr,
+						function(ob) {
+					  		return ob.get('name') == "joblist";
+						});
+					
+					// console.log(stateLocObj.get('items'));
+					
+					var stateJobArr = stateJobObj.get('items');			
+					
+					// Build the filter models and eventually add them to the filter Collection
+					// if joblists.name is present in the statelObj
+					if (_.indexOf(stateJobArr, joblists.name) != -1) {
+					    // then set the css hidden class to false
+					    filter = new Filter({
+					        name: joblists.name,
+					        company_name: companies.name,
+					        hidden: false
+					    });
+					 } else {
+					    filter = new Filter({
+					        name: joblists.name,
+					        company_name: companies.name,
+					        hidden: true
+					    });
+					 };
+					 // add the new filter model to the collection
+					 filterCollection.add(filter);
 				});
 		});
 		return filterCollection;
@@ -326,11 +391,11 @@ MicroBiz.WorkTasksApp.Filters = (function(MicroBiz, Backbone, $){
   // Filters Public API
   // --------------------------
   
-  // Show the filters list
+  // Show the filters list - called from 
   Filters.showFilterList = function(){
 
-    console.log('Is CompanyFilterCollection built?'); 
- 	console.log(Filters.CompanyFilterCollection);
+ 	// console.log('Is CompanyFilterCollection built?'); 
+ 	// console.log(Filters.CompanyFilterCollection);
 
     console.log('Is the current LocationFilterCollections built?'); 
  	console.log(Filters.LocationFilterCollection);
@@ -347,9 +412,6 @@ MicroBiz.WorkTasksApp.Filters = (function(MicroBiz, Backbone, $){
     console.log('Is the current TimeFilterCollection built?'); 
  	console.log(Filters.TimeFilterCollection);
 
-    var companyFilterView = new Filters.CompanyFiltersView({
-      collection: Filters.CompanyFilterCollection
-    });
     var locationFilterView = new Filters.LocationFiltersView({
       collection: Filters.LocationFilterCollection
     });
@@ -366,7 +428,6 @@ MicroBiz.WorkTasksApp.Filters = (function(MicroBiz, Backbone, $){
       collection: Filters.TimeFilterCollection
     });
 
-	MicroBiz.CompanyFilterRegion.show(companyFilterView);
     MicroBiz.LocationFilterRegion.show(locationFilterView);
     MicroBiz.JoblistFilterRegion.show(joblistFilterView);
     MicroBiz.UserFilterRegion.show(userFilterView);
@@ -374,20 +435,34 @@ MicroBiz.WorkTasksApp.Filters = (function(MicroBiz, Backbone, $){
     MicroBiz.TimeFilterRegion.show(timeFilterView);
   };
 
-  // Mail Categories Initializer
+  // Worktasks Filters Event Handlers
+  // -----------------------
+
+  MicroBiz.vent.bind("state:worktasks:filters:changed", function(){
+    console.log('state:worktasks:filters:changed');
+	Filters.LocationFilterCollection = buildFilters('locations', MicroBiz.options.companies, MicroBiz.WorkTasksApp.filters_state);	
+	Filters.JoblistFilterCollection = buildFilters('joblists', MicroBiz.options.companies, MicroBiz.WorkTasksApp.filters_state);
+	// Filters.UserFilterCollection = buildFilters('users', MicroBiz.options.companies);	
+	// Filters.AssetFilterCollection = buildFilters('assets', MicroBiz.options.companies);
+	// Filters.TimeFilterCollection = buildFilters('time', MicroBiz.options.companies);
+	
+	MicroBiz.WorkTasksApp.Filters.showFilterList();
+	//$('#navigation').empty();
+	
+  });
+
+  // Worktasks Filters Initializer
   // ---------------------------
 
   // Get the list of categories on startup and hold
   // them in memory, so we can render them onto the
   // screen when we need to.
   MicroBiz.addInitializer(function(options){
-    // Filters.filterCollection = buildFilters(options.filters);
-	Filters.CompanyFilterCollection = buildFilters('companies', options.companies);
-	Filters.LocationFilterCollection = buildFilters('locations', options.companies);	
-	Filters.JoblistFilterCollection = buildFilters('joblists', options.companies);
-	Filters.UserFilterCollection = buildFilters('users', options.companies);	
-	Filters.AssetFilterCollection = buildFilters('assets', options.companies);
-	Filters.TimeFilterCollection = buildFilters('time', options.companies);
+	Filters.LocationFilterCollection = buildFilters('locations', MicroBiz.options.companies, MicroBiz.WorkTasksApp.filters_state);	
+	Filters.JoblistFilterCollection = buildFilters('joblists', MicroBiz.options.companies, MicroBiz.WorkTasksApp.filters_state);
+	Filters.UserFilterCollection = buildFilters('users', MicroBiz.options.companies, MicroBiz.WorkTasksApp.filters_state);	
+	Filters.AssetFilterCollection = buildFilters('assets', MicroBiz.options.companies, MicroBiz.WorkTasksApp.filters_state);
+	Filters.TimeFilterCollection = buildFilters('time', MicroBiz.options.companies, MicroBiz.WorkTasksApp.filters_state);
   });
 
   return Filters;

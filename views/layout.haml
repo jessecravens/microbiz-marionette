@@ -128,29 +128,55 @@
               ${$value.name}
             {{/each}}
 
-    %script{:id=>"worktasks-company-filters-view-template", :type=>"text/x-jquery-tmpl"}
+    %script{:id=>"worktasks-company-selectors-view-template", :type=>"text/x-jquery-tmpl"}
       %li
         %a{:href=>"#"}Companies
         %span.Companies
-          {{each items}}
-          %input{:type=>"button", :class=>"bluetag", :value=>"${$value.name}"}
-          {{/each}}
+          %select
+            {{each items}}
+            %option{:value=>"${$value.name}"}${$value.name}
+            {{/each}}
 
     %script{:id=>"worktasks-location-filters-view-template", :type=>"text/x-jquery-tmpl"}
       %li
         %a{:href=>"#"}Locations
         %span.Locations
           {{each items}}
+          {{if $value.hidden}}
+          %input{:type=>"button", :class=>"bluetag hidden", :value=>"${$value.name}"}
+          {{else}}
           %input{:type=>"button", :class=>"bluetag", :value=>"${$value.name}"}
+          {{/if}}
           {{/each}}
+        %span.LocationsCheckBoxes
+          %form{:name=>"companyFilterForm"}
+            {{each items}}
+            {{if $value.hidden}}
+            %label{:for=>"chbox-${$value.name}", :class=>""}${$value.name}
+            %input{:id=>"chbox-${$value.name}", :class=>"checkbox-location", :type=>"checkbox", :name=>"chbox-${$value.name}", "data-filter"=>"${$value.name}"}
+            {{else}}
+            %label{:for=>"chbox-${$value.name}"}${$value.name}
+            %input{:id=>"chbox-${$value.name}", :class=>"checkbox-location", :type=>"checkbox", :name=>"chbox-${$value.name}", "data-filter"=>"${$value.name}", "checked"=>"checked"}
+            {{/if}}
+            {{/each}}
 	    
     %script{:id=>"worktasks-joblist-filters-view-template", :type=>"text/x-jquery-tmpl"}
       %li
         %a{:href=>"#"}Joblists
         %span.Joblists
           {{each items}}
+          {{if $value.hidden}}
+          %input{:type=>"button", :class=>"bluetag hidden", :value=>"${$value.name}"}
+          {{else}}
           %input{:type=>"button", :class=>"bluetag", :value=>"${$value.name}"}
+          {{/if}}
           {{/each}}
+        %span.JoblistsCheckBoxes
+          %form{:name=>"companyFilterForm"}
+            {{each items}}
+            %label{:for => "chbox-${$value.mid}"}${$value.name}
+            %input{:type=>"checkbox", :name=>"chbox-${$value.mid}", :value=>"test", :checked=>"checked"}
+            {{/each}}
 
     %script{:id=>"worktasks-user-filters-view-template", :type=>"text/x-jquery-tmpl"}
       %li
@@ -159,6 +185,12 @@
           {{each items}}
           %input{:type=>"button", :class=>"bluetag", :value=>"${$value.name}"}
           {{/each}}
+        %span.UsersCheckBoxes
+          %form{:name=>"companyFilterForm"}
+            {{each items}}
+            %label{:for => "chbox-${$value.mid}"}${$value.name}
+            %input{:type=>"checkbox", :name=>"chbox-${$value.mid}", :value=>"test", :checked=>"checked"}
+            {{/each}}
 
     %script{:id=>"worktasks-asset-filters-view-template", :type=>"text/x-jquery-tmpl"}
       %li
@@ -167,13 +199,19 @@
           {{each items}}
           %input{:type=>"button", :class=>"bluetag", :value=>"${$value.name}"}
           {{/each}}
+        %span.AssetsCheckBoxes
+          %form{:name=>"companyFilterForm"}
+            {{each items}}
+            %label{:for => "chbox-${$value.mid}"}${$value.name}
+            %input{:type=>"checkbox", :name=>"chbox-${$value.mid}", :value=>"test", :checked=>"checked"}
+            {{/each}}
 
     %script{:id=>"worktasks-time-filters-view-template", :type=>"text/x-jquery-tmpl"}
       %li
         %a{:href=>"#"}Time
         %span.Time
           {{each items}}
-          %input{:type=>"button", :class=>"bluetag", :value=>"${$value.name}"}
+          %input{:type=>"button", :class=>"bluetag", :value=>"${$value.start}"}
           {{/each}}
 
   %body
@@ -241,7 +279,7 @@
 
     // worktasks app files
     %script{:src=>"/javascripts/apps/worktasks/microbiz.worktasksapp.js"}
-    %script{:src=>"/javascripts/apps/worktasks/microbiz.worktasksapp.worktaskslist.js"}
+    %script{:src=>"/javascripts/apps/worktasks/microbiz.worktasksapp.selectors.js"}
     %script{:src=>"/javascripts/apps/worktasks/microbiz.worktasksapp.filters.js"}
     %script{:src=>"/javascripts/apps/worktasks/microbiz.worktasksapp.behaviorloglist.js"}
 
@@ -409,6 +447,7 @@
         options.companies = [
           {
             id: "1",
+            mid: "1",
             name: "Kuhl Yougurt",
             locations: [{
               name: "Boerne", 
@@ -452,14 +491,11 @@
             time: [{
               start: "2011-11-22 23:30:12 UTC", 
               end:"2011-11-22 23:30:12 UTC"
-            },
-            {
-              start: "2011-11-22 23:30:12 UTC", 
-              end:"2011-11-22 23:30:12 UTC"
             }]
           },
           {
             id: "2",
+            mid: "2",
             name: "Maids Service",
             locations: [{
               name: "San Antonio", 
@@ -498,13 +534,41 @@
             time: [{
               start: "2011-11-22 23:30:12 UTC", 
               end:"2011-11-22 23:30:12 UTC"
-            },
-            {
-              start: "2011-11-22 23:30:12 UTC", 
-              end:"2011-11-22 23:30:12 UTC"
             }]
           }
         ];
+
+        options.WorktasksStateFilters = [
+          {
+            id: "1",
+            name: "location", 
+            items: ["Boerne", "Kerrville", "Austin"]
+          },
+          {
+            id: "2",
+            name: "joblist", 
+            items: ["Opening Cashier", "Opening Kitchen"]
+          },
+          {
+            id: "3",
+            name: "user", 
+            items: ["John Smith", "Katy Smith"]
+          },
+          {
+            id: "4",
+            name: "asset", 
+            items: ["Pictures", "Feedback"]
+          }
+         ];
+        options.WorktasksStateSelectors = [
+          {
+            id: "1",
+            name: "company", 
+            selected: "Boerne"
+          }
+         ];
+		
+        MicroBiz.options = options;
 
         MicroBiz.start(options);
       });

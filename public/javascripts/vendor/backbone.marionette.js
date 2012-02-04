@@ -265,7 +265,7 @@ Backbone.Marionette = (function(Backbone, _, $){
     this.initializers = [];
     this.vent = _.extend({}, Backbone.Events, Marionette.BindTo);
     _.extend(this, options);
-	console.log('vent');
+	console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! vent');
 	console.log(this.vent)
   };
 
