@@ -2,7 +2,6 @@
 
 // Wortask App Worktasks
 // --------
-
 // Manage the list of worktasks
 
 MicroBiz.WorkTasksApp = (function(MicroBiz, Backbone){
@@ -20,15 +19,14 @@ MicroBiz.WorkTasksApp = (function(MicroBiz, Backbone){
 
   Worktasks.StateCollection = Backbone.Collection.extend({
 	model: Worktasks.State,
-	initialize: function() { 
+	initialize: function(o, type) { 
 
-		console.log('State Collection initialized');
+		console.log('State Collection initialized: ' + type);
 
 	    this.bind("change", function() {
 			// rebuild filters here - when state collection changes
 	    	console.log(this + " state collection changed");
-			MicroBiz.vent.trigger("state:worktasks:filters:changed");
-						
+			MicroBiz.vent.trigger("state:worktasks:"+ type +":changed");
 	    });
 	}
   });
@@ -42,7 +40,6 @@ MicroBiz.WorkTasksApp = (function(MicroBiz, Backbone){
 
   // Public API
   // ----------
-  
   // Show the worktask list.
   // Worktasks.showWorktaskList = function(){
   // 	
@@ -55,9 +52,14 @@ MicroBiz.WorkTasksApp = (function(MicroBiz, Backbone){
     MicroBiz.WorkTasksApp.BehaviorLogList.show(Worktasks.behaviorlogs);
 
 	// doesnt currently get passed any params
+    MicroBiz.WorkTasksApp.Selectors.showSelectorsList();
     MicroBiz.WorkTasksApp.Filters.showFilterList();
+
 	$('#navigation').empty();
+	
+	// sets the router to #worktasks
     MicroBiz.vent.trigger("behaviorlogs:show");
+
   };
 
   // Show filtered behavior log list.
@@ -81,20 +83,13 @@ MicroBiz.WorkTasksApp = (function(MicroBiz, Backbone){
   //   console.log('state:worktasks:filters:changed');
   // });
 
-
-  // Initializer
+  // Initializers
   // -----------
-  
   MicroBiz.addInitializer(function(options){
 	console.log('Worktasks App initializer options:');
-	Worktasks.filters_state = new Worktasks.StateCollection(options.WorktasksStateFilters);
-	
-    // Worktasks.worktasks = new Worktasks.WorktaskCollection(options.worktasks);
+    Worktasks.selectors_state = new Worktasks.StateCollection(options.WorktasksStateSelectors, 'selectors');
+	Worktasks.filters_state = new Worktasks.StateCollection(options.WorktasksStateFilters, 'filters');
     Worktasks.behaviorlogs = new Worktasks.BehaviorLogCollection(options.behaviorlogs);
-
-	// filter first and then show ?????
-    // Worktasks.behaviorlogs = new Worktasks.BehaviorLogCollection(options.behaviorlogs);
-
   });
   
   return Worktasks;

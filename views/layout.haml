@@ -134,7 +134,11 @@
         %span.Companies
           %select
             {{each items}}
-            %option{:value=>"${$value.name}"}${$value.name}
+            {{if $value.selected}}
+            %option{:value=>"${$value.name}", "data-selector"=>"${$value.name}", :selected=>"selected"}${$value.name}
+            {{else}}
+            %option{:value=>"${$value.name}", "data-selector"=>"${$value.name}"}${$value.name}
+            {{/if}}
             {{/each}}
 
     %script{:id=>"worktasks-location-filters-view-template", :type=>"text/x-jquery-tmpl"}
@@ -448,7 +452,7 @@
           {
             id: "1",
             mid: "1",
-            name: "Kuhl Yougurt",
+            name: "Kuhl Yogurt",
             locations: [{
               name: "Boerne", 
               desc:"desc.....",
@@ -564,7 +568,7 @@
           {
             id: "1",
             name: "company", 
-            selected: "Boerne"
+            items:["Maids Service"]
           }
          ];
 		

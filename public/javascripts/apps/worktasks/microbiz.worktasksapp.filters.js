@@ -96,54 +96,17 @@ MicroBiz.WorkTasksApp.Filters = (function(MicroBiz, Backbone, $){
 
     filterClicked: function(e){
       var filter = $(e.currentTarget).data("filter");
-	  console.log('filter clicked');
-	  console.log(filter)
-	
-	  // this is the fork for showing different content based on a catgory
-	  // it can be used here to retrigger showFilters
-	  // firing the change to the filters state model
-	
-	  // var test = MicroBiz.WorkTasksApp.filters_state.get(1);
-		// convert filters_state (Collection) into an array
+			
+		var stateLocArr = getFiltersStateArray('location');
 		
-		var state = MicroBiz.WorkTasksApp.filters_state;
-		
-		var stateArr = _.toArray(state);
-		console.log(stateArr);
-		
-		// use _.find() to get the model with a 'name' attribute == to 'location' out of the state array
-		var stateLocObj = _.find(stateArr,
-			function(ob) {
-		  		return ob.get('name') == "location";
-			});
-		
-		// console.log(stateLocObj.get('items'));
-		
-		var stateLocArr = stateLocObj.get('items');
-		console.log(stateLocArr)
-		
-		// now I have my current state array
-		// and a filter from the click event
-		// if filter exists in the array - then remove
-		// if not - then add
 		if (_.indexOf(stateLocArr, filter) != -1){
 			var index = stateLocArr.indexOf(filter);
 			stateLocArr.splice(index, 1);
 		}
 		else {
 			stateLocArr.push(filter);
-		}
-		
-		
-		// then update state
-        //MicroBiz.WorkTasksApp.filters_state.set({items: stateLocArr})	
+		};
 	    MicroBiz.vent.trigger("state:worktasks:filters:changed");
-	
-      // if (filter){		
-      //   MicroBiz.vent.trigger("behaviorlogs:filter:show", filter);
-      // } else {
-      //   MicroBiz.vent.trigger("behaviorlogs:show");
-      // }
     }
   });
 
@@ -233,8 +196,29 @@ MicroBiz.WorkTasksApp.Filters = (function(MicroBiz, Backbone, $){
 		console.log('filterType:' + filterType);
 		var filter;
 		var filterCollection = new LocationFilterCollection();
-		_.each(obj, function(companies){
 		
+		// SCOPE the current companies
+		
+		// convert selectors_state (Collection) into an array
+		var stateArr = _.toArray(MicroBiz.WorkTasksApp.selectors_state);
+		console.log(stateArr);
+		
+		// use _.find() to get the model with a 'name' attribute == to 'company' out of the state array
+		var stateCompObj = _.find(stateArr,
+			function(ob) {
+		  		return ob.get('name') == "company";
+			});
+		
+		// grab that array
+		var stateCompArr = stateCompObj.get('items');
+		
+		_.each(obj, function(companies){
+				
+				console.log('INSIDE COMPANIES')
+				console.log(companies.name)
+				console.log(_.indexOf(stateCompArr, companies.name) != -1);
+				
+			if (_.indexOf(stateCompArr, companies.name) != -1) {		
 				_.each(companies.locations, function(locations){
 					
 					console.log('STATE - locations');
@@ -253,12 +237,13 @@ MicroBiz.WorkTasksApp.Filters = (function(MicroBiz, Backbone, $){
 					
 					// console.log(stateLocObj.get('items'));
 					
+					// grab that array
 					var stateLocArr = stateLocObj.get('items');			
 					
 					// Build the filter models and eventually add them to the filter Collection
-					// if locations.name is present in the statelObj
+					// if locations.name is present in the stateLocObj
 					if (_.indexOf(stateLocArr, locations.name) != -1) {
-					    // then set the css hidden class to false
+					    // then set the css hidden class to false or show it
 					    filter = new Filter({
 					        name: locations.name,
 					        company_name: companies.name,
@@ -274,10 +259,11 @@ MicroBiz.WorkTasksApp.Filters = (function(MicroBiz, Backbone, $){
 					 // add the new filter model to the collection
 					 filterCollection.add(filter);
 				});
+		    }; // no else necessary as of now
+		
 		});
 		// console.log(filterCollection);
 		return filterCollection;
-
 	  break;
 	case 'joblists':
 		console.log('filterType:' + filterType);
@@ -387,6 +373,23 @@ MicroBiz.WorkTasksApp.Filters = (function(MicroBiz, Backbone, $){
 
 	};
   };
+
+
+  var getFiltersStateArray = function(type){
+	
+		var filters_state = MicroBiz.WorkTasksApp.filters_state;
+		var stateArr = _.toArray(filters_state);
+
+		// use _.find() to get the model with a 'name' attribute == to get an obj of type out of the state array
+		var stateObj = _.find(stateArr,
+			function(ob) {
+		  		return ob.get('name') == type;
+			});
+
+		var stateItemsArr = stateObj.get('items');
+		return stateItemsArr;
+	}
+
 
   // Filters Public API
   // --------------------------
